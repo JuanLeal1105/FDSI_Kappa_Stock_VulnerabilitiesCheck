@@ -1,6 +1,5 @@
 package edu.dosw.Kappa_Stock_BackEnd.Application.Services.ProductServices;
 
-
 import edu.dosw.Kappa_Stock_BackEnd.Application.Dtos.ProductResponse;
 import edu.dosw.Kappa_Stock_BackEnd.Application.Dtos.command.ProductCommands.CreateProductCommand;
 import edu.dosw.Kappa_Stock_BackEnd.Application.Ports.ProductRepositoryPort;
@@ -13,10 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class CreateProductService implements CreateProductUseCase {
     private final ProductRepositoryPort productRepository;
+
     @Override
     public ProductResponse createProduct(CreateProductCommand command){
         if (productRepository.existsByName(command.name())){
-            throw new RuntimeException();
+            throw new IllegalArgumentException("Product with name '" + command.name() + "' already exists");
         }
         Product product = Product.builder()
                 .name(command.name())
