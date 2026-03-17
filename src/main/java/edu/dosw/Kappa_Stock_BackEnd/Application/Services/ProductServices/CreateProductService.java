@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class CreateProductService implements CreateProductUseCase {
-
     private final ProductRepositoryPort productRepository;
-
     @Override
     public ProductResponse createProduct(CreateProductCommand command){
         if (productRepository.existsByName(command.name())){
@@ -33,9 +31,4 @@ public class CreateProductService implements CreateProductUseCase {
         Product saved = productRepository.save(product);
         return ProductResponse.from(saved);
     }
-
-
-
-
-
 }
