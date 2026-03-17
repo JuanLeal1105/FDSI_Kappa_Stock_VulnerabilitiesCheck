@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 RUN mvn -B -DskipTests clean package
 
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:25.0.2_10-jre
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
