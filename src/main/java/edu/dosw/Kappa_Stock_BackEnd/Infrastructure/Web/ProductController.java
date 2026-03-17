@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<ProductResponse> updateProduct(
             @PathVariable String id,
             @Valid @RequestBody UpdateProductRequest request) {
@@ -63,16 +64,4 @@ public class ProductController {
 
         return ResponseEntity.ok(response);
     }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<ProductResponse> partiallyUpdateProduct(
-            @PathVariable String id,
-            @Valid @RequestBody UpdateProductRequest request) {
-
-        UpdateProductCommand command = UpdateProductCommand.fromRequest(id, request);
-        ProductResponse response = updateProductUseCase.updateProduct(command);
-
-        return ResponseEntity.ok(response);
-    }
-
 }
