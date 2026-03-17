@@ -25,13 +25,12 @@ public class UpdateProductService implements UpdateProductUseCase {
                 ));
 
         if (command.name() != null &&
-                !command.name().equals(existingProduct.getName())) {
+                !command.name().equals(existingProduct.getName()) &&
+                productRepository.existsByName(command.name())) {
 
-            if (productRepository.existsByName(command.name())) {
-                throw new ExpressionException(
-                        "Product with name '" + command.name() + "' already exists"
-                );
-            }
+            throw new ExpressionException(
+                    "Product with name '" + command.name() + "' already exists"
+            );
         }
 
         updateProductFields(existingProduct, command);
