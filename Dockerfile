@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 RUN mvn -B -DskipTests clean package
 
-FROM eclipse-temurin:25.0.2_10-jre
+FROM eclipse-temurin:21-jre-jammy
 
 RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 
