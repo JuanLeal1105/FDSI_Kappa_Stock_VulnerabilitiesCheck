@@ -8,9 +8,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j; // Added import for SLF4J
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/products/{productId}/stock")
 @RequiredArgsConstructor
@@ -23,32 +25,21 @@ public class StockController {
     @Operation(summary = "Increase product stock",
             description = "Add stock to a product (restock, returns, etc.)")
     @PostMapping("/increase")
-    public ResponseEntity<ProductResponse> increaseStock(
-            @PathVariable String productId,
-            @Valid @RequestBody StockOperationRequest request) {
-
-        StockOperationCommand command =
-                StockOperationCommand.fromRequest(productId, request);
+    public ResponseEntity<ProductResponse> increaseStock(@PathVariable String productId, @Valid @RequestBody StockOperationRequest request) {
+        StockOperationCommand command = StockOperationCommand.fromRequest(productId, request);
 
         ProductResponse response = increaseStockUseCase.increaseStock(command);
-
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Decrease product stock",
             description = "Remove stock from a product (sales, damage, etc.)")
     @PostMapping("/decrease")
-    public ResponseEntity<ProductResponse> decreaseStock(
+    public ResponseEntity<ProductResponse> decreaseStock(@PathVariable("productId") String productId, @Valid @RequestBody StockOperationRequest request) {
+        log.info("HIT decreaseStock | productId={} amount={}", productId, request.getAmount());
 
-            @PathVariable("productId") String productId,
-            @Valid @RequestBody StockOperationRequest request) {
-        System.out.println("HIT decreaseStock | productId=" + productId
-                + " amount=" + request.getAmount());
-        StockOperationCommand command =
-                StockOperationCommand.fromRequest(productId, request);
-
+        StockOperationCommand command = StockOperationCommand.fromRequest(productId, request);
         ProductResponse response = decreaseStockUseCase.decreaseStock(command);
-
         return ResponseEntity.ok(response);
     }
 }
